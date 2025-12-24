@@ -3,43 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COMMON HTML TAGS</title>
+    <title>Focus Flow - Study Timer</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary: #6366f1; /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.3);
+            --bg: #0f172a;      /* Dark Slate */
+            --card: #1e293b;    /* Lighter Slate */
+            --text: #f8fafc;    /* White-ish */
+            --text-dim: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Phone Container */
+        .phone-frame {
+            width: 100%;
+            max-width: 375px;
+            background-color: var(--bg);
+            height: 100vh;
+            max-height: 812px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 40px; /* Rounded corners for desktop view */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 8px solid #334155;
+        }
+
+        /* Header */
+        .header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+        .icon-btn { background: none; border: none; color: var(--text); cursor: pointer; font-size: 20px; }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Timer Circle */
+        .timer-circle {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0deg, var(--card) 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 40px;
+            box-shadow: 0 0 40px var(--primary-glow);
+            transition: background 0.5s ease;
+        }
+        
+        /* Inner Circle (Hides center of conic gradient) */
+        .timer-inner {
+            width: 240px;
+            height: 240px;
+            background-color: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .time-display {
+            font-size: 64px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+
+        .time-label {
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Controls Area */
+        .controls {
+            width: 100%;
+            background-color: var(--card);
+            border-radius: 30px 30px 0 0;
+            padding: 30px 24px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        /* Task Input */
+        .task-input-group {
+            margin-bottom: 24px;
+        }
+        .task-label { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; display: block; font-weight: 600; }
+        .task-input {
+            width: 100%;
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+        .task-input:focus { border-color: var(--primary); }
+
+        /* Tags */
+        .tags { display: flex; gap: 10px; margin-bottom: 30px; }
+        .tag {
+            background-color: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-dim);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .tag.active {
+            background-color: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Slider */
+        .slider-container { margin-bottom: 30px; }
+        .slider-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: var(--text-dim); }
+        .slider {
+            webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 5px;
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            webkit-apperance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Main Button */
+        .btn-start {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        }
+        .btn-start:active { transform: scale(0.98); }
+
+        /* Animations */
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        /* Utility */
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
-    <h1>Common HTML Tags demonstration</h1>
-    <a  href="www.youtube.com">GO to youtube</a>
-    <img width="500px" height="200px" src="https://cdn.pixabay.com/photo/2020/05/30/01/03/shinkansen-5237269_1280.jpg" alt="IMAGE OF Train">
-    
-    <h1>LIST OF PROGRMMING LANGUAGES</h1>
-    <ul>
-        <li>JAVASCRIPT</li>
-        <li>PYTHON</li>
-        <li>CPP</li>
-        <li>java</li>
-    </ul>
-    <hr>
 
-    <h1>LIST OF PROGRMMING LANGUAGES</h1>
-    <ol>
-        <li>JAVASCRIPT</li>
-        <li>PYTHON</li>
-        <li>CPP</li>
-        <li>java</li>
+    <div class="phone-frame">
+        <!-- Header -->
+        <div class="header">
+            <button class="icon-btn">✕</button>
+            <h1>Focus Session</h1>
+            <button class="icon-btn">⚙️</button>
+        </div>
 
+        <!-- Timer Display -->
+        <div class="content">
+            <div class="timer-circle" id="progressRing">
+                <div class="timer-inner">
+                    <div class="time-display" id="timeDisplay">25:00</div>
+                    <div class="time-label" id="statusLabel">Ready to Focus</div>
+                </div>
+            </div>
+        </div>
 
-    </ol>
-    <hr>
-    <h1>LIST OF PROGRMMING LANGUAGES</h1>
-    <dl>
-        <dt>JAVASCRIPT</dt>
-        <dt>PYTHON</dt>
-        <dt>CPP</dt>
-        <dt>java</dt>
+        <!-- Controls Sheet -->
+        <div class="controls">
+            <!-- Task Input -->
+            <div class="task-input-group">
+                <label class="task-label">I WANT TO FOCUS ON</label>
+                <input type="text" class="task-input" placeholder="e.g. Read Physics Chapter 4..." id="taskInput">
+            </div>
 
+            <!-- Tags -->
+            <div class="tags">
+                <div class="tag active" onclick="selectTag(this)">📚 Study</div>
+                <div class="tag" onclick="selectTag(this)">💻 Code</div>
+                <div class="tag" onclick="selectTag(this)">✍️ Write</div>
+            </div>
 
-    </dl>
+            <!-- Time Slider -->
+            <div class="slider-container">
+                <div class="slider-header">
+                    <span>Duration</span>
+                    <span id="sliderValue">25 min</span>
+                </div>
+                <input type="range" min="5" max="120" step="5" value="25" class="slider" id="timeSlider" oninput="updateTime()">
+            </div>
 
+            <!-- Start Button -->
+            <button class="btn-start" id="actionBtn" onclick="toggleTimer()">Start Focus</button>
+        </div>
+    </div>
 
+    <!-- Minimal JavaScript for Interactivity -->
+    <script>
+        let timer;
+        let isRunning = false;
+        let timeLeft = 25 * 60; // seconds
+        let totalTime = 25 * 60;
 
+        const timeDisplay = document.getElementById('timeDisplay');
+        const slider = document.getElementById('timeSlider');
+        const sliderValue = document.getElementById('sliderValue');
+        const actionBtn = document.getElementById('actionBtn');
+        const progressRing = document.getElementById('progressRing');
+        const statusLabel = document.getElementById('statusLabel');
+
+        // Update time when slider moves
+        function updateTime() {
+            if (isRunning) return; // Lock slider while running
+            const minutes = slider.value;
+            timeLeft = minutes * 60;
+            totalTime = timeLeft;
+            sliderValue.innerText = minutes + " min";
+            timeDisplay.innerText = `${minutes}:00`;
+            updateProgress(0);
+        }
+
+        // Tag Selection Visual
+        function selectTag(element) {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Main Timer Logic
+        function toggleTimer() {
+            if (isRunning) {
+                // Pause Logic
+                clearInterval(timer);
+                isRunning = false;
+                actionBtn.innerText = "Resume Focus";
+                actionBtn.style.backgroundColor = "#334155"; // Grey out
+                statusLabel.innerText = "Paused";
+            } else {
+                // Start Logic
+                isRunning = true;
+                actionBtn.innerText = "Pause Focus";
+                actionBtn.style.backgroundColor = "#6366f1"; // Reset color
+                statusLabel.innerText = "Stay Focused";
+                
+                timer = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateDisplay();
+                        
+                        // Update Progress Ring
+                        const progress = ((totalTime - timeLeft) / totalTime) * 100;
+                        updateProgress(progress);
+                    } else {
+                        // Timer Finished
+                        clearInterval(timer);
+                        isRunning = false;
+                        timeDisplay.innerText = "00:00";
+                        actionBtn.innerText = "Session Complete";
+                        statusLabel.innerText = "Well Done!";
+                        // Play a sound here in a real app
+                    }
+                }, 1000);
+            }
+        }
+
+        // Update the 00:00 Text
+        function updateDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            timeDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // Update the Circular Gradient
+        function updateProgress(percent) {
+            // This creates a conic gradient that looks like a progress bar
+            // We use 3.6 because 360 degrees / 100 percent = 3.6
+            const deg = percent * 3.6;
+            progressRing.style.background = `conic-gradient(var(--primary) ${deg}deg, var(--card) ${deg}deg)`;
+        }
+    </script>
 </body>
 </html>

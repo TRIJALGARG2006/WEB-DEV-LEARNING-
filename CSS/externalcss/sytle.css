@@ -1,0 +1,28 @@
+body {
+        background-color: beige ; font-family: 'Times New Roman', Times, serif;
+        padding: 20px;
+    }
+    h1{
+        color: blue; text-align: center; padding: 20px;
+        text-transform: uppercase;
+    }
+    p {
+        color: blue; font-weight: bold;
+    }
+
+    .btn {
+  padding: 12px 25px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+
+  /* Smooth transition */
+  /* transition: transform 0.3s ease, background-color 0.3s ease; */
+}
+
+.btn:hover {
+  background-color: #2ecc71;
+  /* transform: scale(1.1); */
+}

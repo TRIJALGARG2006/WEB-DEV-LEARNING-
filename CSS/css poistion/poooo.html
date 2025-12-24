@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Absolute Positioning Example</title>
+<style>
+.parent {
+  width: 400px;
+  height: 400px;
+  background-color: lightgray;
+  position: relative; /* Important */
+  margin: 50px auto;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  /* color: white;
+  text-align: center;
+  line-height: 100px;
+  font-weight: bold; */
+}
+
+/* Corner positions */
+.tl {
+  top: 0;
+  left: 0;
+  background-color: red;
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  background-color: blue;
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  background-color: green;
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  background-color: purple;
+}
+</style>
+
+
+
+</head>
+<body>
+
+<div class="parent">
+  <div class="box tl">Top Left</div>
+  <div class="box tr">Top Right</div>
+  <div class="box bl">Bottom Left</div>
+  <div class="box br">Bottom Right</div>
+</div>
+
+</body>
+</html>

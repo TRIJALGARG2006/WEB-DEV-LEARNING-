@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+.container {
+  display: grid;
+  /* Creates 3 equal columns */
+  grid-template-columns: auto auto auto;
+  /* Creates 3 rows with a fixed height for visibility */
+  grid-template-rows: 100px 100px 100px;
+  gap: 10px;
+  background-color: #f0f0f0;
+}
+
+.container > div {
+  background-color: #ddd;
+  border: 2px solid #333;
+  /* display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  font-weight: bold; */
+}
+
+/* REQUIREMENT 1: First box spans from first line to last column */
+.box1 {
+  background-color: red; /* Pink for visibility */
+  grid-column: 1 / -1; /* Start at line 1, end at the last line */
+  grid-row: 1;
+}
+
+/* REQUIREMENT 2: Second box starts from row 2 and spans till the last row */
+.box2 {
+  background-color: #a1c4fd; /* Blue for visibility */
+  grid-column: 1; /* Keeps it in the first column */
+  grid-row: 2 / -1; /* Start at row line 2, end at the last line */
+}
+
+
+    </style>
+</head>
+<body>
+    
+<div class="container">
+  <div class="box1">Box 1 (Full Width)</div>
+  <div class="box2">Box 2 (Vertical Span)</div>
+  <div class="item">Item 3</div>
+  <div class="item">Item 4</div>
+  <div class="item">Item 5</div>
+  <div class="item">Item 6</div>
+</div>
+</body>
+</html>
+
